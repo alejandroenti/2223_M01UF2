@@ -25,15 +25,21 @@ fi
 
 # Enviamos el nombre del archivo a generar por el servidor
 echo "(5) SEND MSG: FILE_NAME filename"
-echo "FILE_NAME vaca.vaca" | nc $SERVER_ADDRESS $PORT
+FILENAME="vaca.vaca"
+echo "FILE_NAME $FILENAME" | nc $SERVER_ADDRESS $PORT
 
 echo "(6) LISTEN: Comprobacion Filename"
 MSG=`nc -l $PORT`
 
 if [ "$MSG" != "OK_FILE_NAME" ]
 then
-	echo "ERROR 2: Nombre de archivo mal formado"
+	echo "ERROR 2: Nombre de archivo incorrecto"
 	exit 2
 fi
+
+#Eviamos el contenido del archivo
+echo "(9) SEND: Enviamos el contenido del archivo"
+cat vacas/$FILENAME | nc $SERVER_ADDRESS $PORT
+
 
 exit 0

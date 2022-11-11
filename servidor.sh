@@ -42,11 +42,15 @@ FILENAME=`echo $MSG | cut -d " " -f 2`
 echo "(7) SEND MSG: OK_FILE_NAME / KO_FILE_NAME"
 if [ "$PREFIX" != "FILE_NAME" ]
 then
-	echo "ERROR 2: Nombre de archivo mal formado"
+	echo "ERROR 2: Nombre de archivo incorrecto"
 	echo "KO_FILE_NAME" | nc $IP_CLIENT $PORT
 	exit 2
 fi
 
 echo "OK_FILE_NAME" | nc $IP_CLIENT $PORT
+
+#Nos ponemos a escuchar el contenido del archivo
+echo "(8) LISTEN FILE CONTENT"
+nc -l $PORT > inbox/$FILENAME
 
 exit 0
