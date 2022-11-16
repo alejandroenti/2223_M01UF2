@@ -19,6 +19,17 @@ MSG=`nc -l $PORT`
 
 HANDSHAKE=`echo $MSG | cut -d " " -f 1`
 IP_CLIENT=`echo $MSG | cut -d " " -f 2`
+IP_CLIENT_MD5=`echo $MSG | cut -d " " -f 3`
+
+#Comprobamos que la IP recibida es correcta con la que nos ha llegado
+
+IP_MD5=`echo $IP_CLIENT | md5sum | cut -d " " -f 1`
+
+if [ "$IP_MD5" != "$IP_CLIENT_MD5" ]
+then
+	echo "Error 0: IP Cliente incorrecta"
+	exit 1
+fi
 
 # Revisamos todas las opciones que se encuentran mal y por
 # último hacemos la opción correcta fuera del IF

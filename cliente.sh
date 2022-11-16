@@ -1,12 +1,14 @@
 #!/bin/bash
 
+IP_LOCAL="127.0.0.1"
 PORT="2223"
 SERVER_ADDRESS="localhost"
 
 echo "Cliente TURIP"
 
-echo "(1) SEND MSG: HOLI_TURIP 127.0.0.1"
-echo "HOLI_TURIP 127.0.0.1" | nc $SERVER_ADDRESS $PORT
+echo "(1) SEND MSG: HOLI_TURIP $IP_LOCAL IP_MD5"
+IP_MD5=`echo $IP_LOCAL | md5sum | cut -d " " -f 1`
+echo "HOLI_TURIP $IP_LOCAL $IP_MD5" | nc $SERVER_ADDRESS $PORT
 
 # Nos ponemos en escucha por el puerto 2223 para recibir la respuesta
 
