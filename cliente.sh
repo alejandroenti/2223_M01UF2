@@ -25,23 +25,43 @@ then
 	exit 1
 fi
 
-# Enviamos el nombre del archivo a generar por el servidor
-echo "(5) SEND MSG: FILE_NAME filename"
-FILENAME="vaca.vaca"
-echo "FILE_NAME $FILENAME" | nc $SERVER_ADDRESS $PORT
+# Enviamos el número de archivos que se van a generar
+echo "(5) SEND MSG: NUM_FILES num"
+NUM_FILES=`ls vaca | wc -l`
+NUM_FILES_MD5=`echo $NUM_FILES | md5sum | cut -d " " -f 1`
+echo "NUM_FILES $NUM_FILES $NUM_FILES_MD5" | nc $SERVER_ADDRESS $PORT
 
-echo "(6) LISTEN: Comprobacion Filename"
+echo "(6) LISTEN: Comprobacion Num Files"
 MSG=`nc -l $PORT`
 
-if [ "$MSG" != "OK_FILE_NAME" ]
+# Comprobamos el número de archivos le ha llegado coorrectamente al servidor
+if [ "$MSG" != "OK_FILE_NUM" ]
 then
-	echo "ERROR 2: Nombre de archivo incorrecto"
-	exit 2
+	echo "ERROR 3: Numero de archivos incorrecto"
+	exit 3
 fi
 
-#Eviamos el contenido del archivo
-echo "(9) SEND: Enviamos el contenido del archivo"
-cat vacas/$FILENAME | nc $SERVER_ADDRESS $PORT
+# Comenzamos el bucle de envíos
 
+for FILE in `ls vacas`
+do
+	# Enviamos el nombre del archivo a generar por el servidor
+	FILENAME_MD5=`echo $FILE | md5sum | cut -d " " -f 1`
+	echo "FILE_NAME $FILE $FILENAME_MD5" | nc $SERVER_ADDRESS $PORT
+	
+
+	echo "(10) LISTEN: Comprobacion Filename"
+	MSG=`nc -l $PORT`
+
+	if [ "$MSG" != "OK_FILE_NAME" ]
+	then
+		echo "ERROR 2: Nombre de archivo incorrecto"
+		exit 2
+	fi
+
+	#Eviamos el contenido del archivo
+	echo "(11) SEND: Enviamos el contenido del archivo"
+	cat vacas/$FILE | nc $SERVER_ADDRESS $PORT
+done
 
 exit 0
