@@ -73,8 +73,8 @@ do
 	NAMEFILE=`echo $MSG | cut -d " " -f 2`
 	NAMEFILE_CLIENT_MD5=`echo $MSG | cut -d " " -f 3`
 	
-	NAMEFILE_MD5=`echo $NUM_FILES | md5sum | cut -d " " -f 1`
-
+	NAMEFILE_MD5=`echo $NAMEFILE | md5sum | cut -d " " -f 1`
+	
 	echo "(8) SEND MSG: OK_FILE_NAME / KO_FILE_NAME"
 	if [ "$NAMEFILE_MD5" != "$NAMEFILE_CLIENT_MD5" ]
 	then

@@ -27,9 +27,10 @@ fi
 
 # Enviamos el número de archivos que se van a generar
 echo "(5) SEND MSG: NUM_FILES num"
-NUM_FILES=`ls vaca | wc -l`
+NUM_FILES=`ls vacas | wc -l`
 NUM_FILES_MD5=`echo $NUM_FILES | md5sum | cut -d " " -f 1`
 echo "NUM_FILES $NUM_FILES $NUM_FILES_MD5" | nc $SERVER_ADDRESS $PORT
+echo "$NUM_FILES"
 
 echo "(6) LISTEN: Comprobacion Num Files"
 MSG=`nc -l $PORT`
@@ -47,8 +48,7 @@ for FILE in `ls vacas`
 do
 	# Enviamos el nombre del archivo a generar por el servidor
 	FILENAME_MD5=`echo $FILE | md5sum | cut -d " " -f 1`
-	echo "FILE_NAME $FILE $FILENAME_MD5" | nc $SERVER_ADDRESS $PORT
-	
+	echo "FILE_NAME $FILE $FILENAME_MD5" | nc $SERVER_ADDRESS $PORT	
 
 	echo "(10) LISTEN: Comprobacion Filename"
 	MSG=`nc -l $PORT`
